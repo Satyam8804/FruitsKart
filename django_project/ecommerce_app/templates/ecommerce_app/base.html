@@ -1,31 +1,37 @@
+{% load static tailwind_tags %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}Simple ecommerce </title>
-    <style>
-        table{
-            border-collapse: collapse;
-            border: none;
-        }
-        td{
-            padding: 10px;
-        }
-        form{
-            margin-bottom: 0;
-        }
-    </style>
+    
+    {% tailwind_css %}
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    
 </head>
 <body>
+    <nav class="bg-gray-100 p-4 w-full">
+        <div class="mx-auto flex justify-between items-center">
+            <a class="text-xl font-bold text-gray-800" href="{% url 'index' %}">Fruits Kart</a>
+            <button class="block lg:hidden focus:outline-none">
+                <svg class="h-6 w-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <ul class="hidden lg:flex space-x-4">
+                <li class="nav-item">
+                    <a class="text-gray-800 hover:text-gray-600" href="{% url 'index' %}">All Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="text-gray-800 hover:text-gray-600" href="{% url 'show_cart' %}">Cart: {{ cart_item_count }} item</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-<p>
-    <a href="{% url 'index' %}">All Products</a> |
-    <a href="{% url 'show_cart' %}">Cart: {{ cart_item_count }} item</a>
-</p>
-
-{% block content %}
-
-{% endblock %}
-
+    {% block content %}
+    {% endblock %}
+    <script src="{% static 'js/Slide.js' %}"></script>
 </body>
 </html>

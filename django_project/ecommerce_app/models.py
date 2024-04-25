@@ -6,14 +6,14 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
     slug = models.SlugField()
     description = models.TextField()
-    image = models.ImageField(upload_to='products_images/', blank=True)
+    image = models.ImageField(upload_to='images/', blank=True)
 
     def __str__(self):
         return self.name
 
 
 class CartItem(models.Model):
-    cart_id = models.CharField(max_length=50)
+    cart_id = models.CharField(max_length=50, null=False)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     quantity = models.IntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
@@ -31,7 +31,7 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
-    name = models.CharField(max_length=191)
+    name = models.CharField(max_length=100)
     email = models.EmailField()
     postal_code = models.IntegerField()
     address = models.CharField(max_length=191)

@@ -15,7 +15,6 @@ class CheckoutForm(forms.ModelForm):
     class Meta:
         model = Order
         exclude = ('paid',)
-
         widgets = {
-            'address': forms.Textarea(attrs={'row': 5, 'col': 8}),
+            'address': forms.Textarea(attrs={'rows': 2, 'cols': 40}),  # Use 'rows' and 'cols' instead of 'row' and 'col'
         }

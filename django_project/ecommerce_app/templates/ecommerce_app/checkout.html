@@ -6,27 +6,55 @@
 
 {% block content %}
 
-    <div class="container">
-        <div class="row">
-
-            <h2>Checkout</h2>
-
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-gradient-to-br from-indigo-900 via-teal-500 to-sky-300 p-8">
+    <div class="lg:col-span-1">
+        <div class="bg-[#dfdada89]  shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-semibold mb-4">Your Cart</h2>
+            <hr>
+            {% if cart_items %}
+                <ul class="py-4">
+                    {% for item in cart_items %}
+                        <li class="mb-2 text-white">{{ item.product.name }} - {{ item.quantity }} x ${{ item.product.price }}</li>
+                    {% endfor %}
+                </ul>
+                <p class="font-semibold text-white">Total: ${{ subtotal }}</p>
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="lg:col-span-1">
+        <div class="bg-[#dfdada89] shadow-md rounded-lg p-4">
+            <h2 class="text-2xl font-semibold mb-4">Checkout</h2>
             {% for message in messages %}
-                <p>{{ message }}</p>
+                <p class="text-red-500">{{ message }}</p>
             {% endfor %}
-
-
-            <form action="" method="post">
-                <table>
-                    {% csrf_token %}
-                    {{ form.as_table }}
-                    <tr>
-                        <td></td>
-                        <td><input type="submit" value="Place Order"></td>
-                    </tr>
-                </table>
+            <form action="" method="post" class="rounded px-8 pt-6 pb-8 mb-4 grid grid-cols-1 gap-4">
+                {% csrf_token %}
+                <div class="flex flex-col">
+                    <label for="id_full_name" class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="flex flex-col">
+                    <label for="id_email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="flex flex-col">
+                    <label for="id_address" class="block text-gray-700 text-sm font-bold mb-2">Address</label>
+                    {{ form.address }}
+                </div>
+                <div class="flex flex-col">
+                    <label for="id_postal_code" class="block text-gray-700 text-sm font-bold mb-2">Postal Code</label>
+                    {{ form.postal_code }}
+                </div>
+                <div class="flex items-center justify-end">
+                    <button type="submit" value="Place Order" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Place Order
+                    </button>
+                </div>
             </form>
         </div>
     </div>
+</div>
 
 {% endblock %}

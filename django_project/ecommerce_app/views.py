@@ -46,41 +46,55 @@ def show_cart(request):
                                             'cart_items': cart_items,
                                             'cart_subtotal': cart_subtotal,
                                             })
-
+from .forms import CheckoutForm
+from .models import CartItem, Order, LineItem
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 def checkout(request):
+    session_cart_id = request.session.get('cart_id')
+    
+    # Check if session_cart_id is not None before filtering cart items
+    if session_cart_id is not None:
+        cart_items = CartItem.objects.filter(cart_id=session_cart_id)
+
+        subtotal = sum(item.price * item.quantity for item in cart_items)
+    else:
+        cart_items = []
+        subtotal = 0
+
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
             cleaned_data = form.cleaned_data
             o = Order(
-                name = cleaned_data.get('name'),
-                email = cleaned_data.get('email'),
-                postal_code = cleaned_data.get('postal_code'),
-                address = cleaned_data.get('address'),
+                name=cleaned_data.get('name'),
+                email=cleaned_data.get('email'),
+                postal_code=cleaned_data.get('postal_code'),
+                address=cleaned_data.get('address'),
             )
             o.save()
 
-            all_items = cart.get_all_cart_items(request)
-            for cart_item in all_items:
+            for cart_item in cart_items:
                 li = LineItem(
-                    product_id = cart_item.product_id,
-                    price = cart_item.price,
-                    quantity = cart_item.quantity,
-                    order_id = o.id
+                    product_id=cart_item.product_id,
+                    price=cart_item.price,
+                    quantity=cart_item.quantity,
+                    order=o
                 )
-
                 li.save()
 
-            cart.clear(request)
-
-            request.session['order_id'] = o.id
+            request.session['cart_id'] = 1234
 
             messages.add_message(request, messages.INFO, 'Order Placed!')
             return redirect('checkout')
-
-
     else:
         form = CheckoutForm()
-        return render(request, 'ecommerce_app/checkout.html', {'form': form})
 
+    context = {
+        'form': form,
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+    }
+
+    return render(request, 'ecommerce_app/checkout.html', context)

@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"  # On Windows
+
+# settings.py
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Application definition
 
@@ -38,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ecommerce_app',
+    'tailwind',
+    'django_browser_reload',
+    'theme'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+
 ]
 
 ROOT_URLCONF = 'django_project.urls'
@@ -124,3 +133,37 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+# settings.py
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+TAILWIND_APP_NAME = 'theme'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+# STATICFILES_DIRS =[
+#     os.path.join(BASE_DIR,'static')
+# ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1',
+#     }
+# }
+
+
+SESSION_COOKIE_AGE = 86400  # 1 day in seconds
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

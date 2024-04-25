@@ -3,68 +3,81 @@
 {% block title %}
     My Cart |
 {% endblock %}
-
+{% load static%}
 {% block content %}
-
-    <h2>My Cart</h2>
+<div class="w-full min-h-[100vh] mx-auto px-4 py-8 bg-gradient-to-br from-indigo-900 via-teal-500 to-sky-300">
+    <h2 class="text-3xl font-semibold mb-4 text-white">My Cart</h2>
     
     {% if cart_item_count %}
-    <table>
-        <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th></th>
-            <th></th>
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item in cart_items %}
-            <tr>
-                <td>{{ item.product.name }}</td>
-                <td>{{ item.price }}</td>
-                <td>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <input type="text" name="quantity" value="{{ item.quantity }}">
-                        <input type="hidden" name="item_id" value="{{ item.id }}">
-                </td>
-                <td>
-                        <input type="submit" name="submit" value="Update">
-                    </form>
-                </td>
-                <td>
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="item_id" value="{{ item.id }}">
-                        <input type="submit" name="submit" value="Remove">
-                    </form>
-                </td>
-                <td>${{ item.total_cost }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="5" style="text-align: right">Total</td>
-                <td>${{ cart_subtotal }}</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td colspan="4" style="text-align: right">
-                    <a href="{% url 'index' %}" class="btn btn-primary">Continue Shopping</a>
-                </td>
-                {% if cart_item_count %}
-                    <td><a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a></td>
-                {% endif %}
-            </tr>
-        </tfoot>
-    </table>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 text-left text-md font-medium text-white uppercase tracking-wider">Product</th>
+                    <th class="px-6 py-3 text-left text-md font-medium text-white uppercase tracking-wider">Price</th>
+                    <th class="px-6 py-3 text-left text-md font-medium text-white uppercase tracking-wider">Quantity</th>
+                    <th class="px-6 py-3"></th>
+                    <th class="px-6 py-3"></th>
+                    <th class="px-6 py-3 text-left text-md font-medium text-white uppercase tracking-wider">Total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for item in cart_items %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 h-20 w-20">
+                                {% if item.product.image %}
+                                <img class="h-16 w-16 rounded-lg" src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                <img class="h-10 w-10 rounded-full" src="{% static 'images/mango.jpg' %}" alt="Placeholder Image">
+                                {% endif %}
+                            </div>
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">{{ item.product.name }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${{ item.price }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="w-12 border-gray-300 rounded-md">
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                            <input type="submit" name="submit" value="Update"  class="text-indigo-600 hover:text-indigo-900">
+                        </form>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <button type="submit" name="submit" value="Remove" class="text-red-600 hover:text-red-900">Remove</button>
+                        </form>
+                    </td>
+                    <td>${{ item.total_cost }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-right">Total</td>
+                    <td class="px-6 py-4">${{ cart_subtotal }}</td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="px-6 py-4 text-right">
+                        <a href="{% url 'index' %}" class="bg-green-500 p-2 rounded-md text-white font-bold text-sm">Continue Shopping</a>
+                        {% if cart_item_count %}
+                            <a href="{% url 'checkout' %}" class="bg-blue-500 p-2 rounded-md text-white font-bold text-sm">Checkout</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
     {% else %}
-        <p>Cart Empty</p>
+        <p class="text-lg">Your cart is empty.</p>
     {% endif %}
-
-
+</div>
 {% endblock %}

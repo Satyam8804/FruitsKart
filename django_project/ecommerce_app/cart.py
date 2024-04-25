@@ -9,6 +9,7 @@ def _cart_id(request):
     return request.session['cart_id']
 
 
+
 def _generate_cart_id():
     import string, random
     return ''.join([random.choice(string.ascii_letters + string.digits) for _ in range(50)])
@@ -17,12 +18,10 @@ def _generate_cart_id():
 def get_all_cart_items(request):
     return CartItem.objects.filter(cart_id = _cart_id(request))
 
-
 def add_item_to_cart(request):
-    # cart_id = _cart_id(request)
-
-    product_id = request.form_data['product_id']
-    quantity = request.form_data['quantity']
+    print("POST data:", request.POST)
+    product_id = request.POST.get('product_id')  # Use request.POST to access form data
+    quantity = request.POST.get('quantity')
 
     p = get_object_or_404(Product, id=product_id)
 
@@ -35,19 +34,17 @@ def add_item_to_cart(request):
     for cart_item in cart_items:
         if cart_item.product_id == product_id:
             cart_item.update_quantity(quantity)
-            # cart_item.save()
             item_in_cart = True
 
     if not item_in_cart:
         item = CartItem(
-            cart_id = _cart_id(request),
-            price = price,
-            quantity = quantity,
-            product_id = product_id,
+            cart_id=_cart_id(request),
+            price=price,
+            quantity=quantity,
+            product_id=product_id,
         )
-
-        # item.cart_id = cart_id
         item.save()
+
 
 
 def item_count(request):
@@ -82,5 +79,4 @@ def update_item(request):
 def clear(request):
     cart_items = get_all_cart_items(request)
     cart_items.delete()
-
 
